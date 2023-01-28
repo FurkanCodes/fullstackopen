@@ -16,7 +16,7 @@ const arr = new Uint8Array(8)
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(arr)
 
-
+  let biggest = votes.indexOf(Math.max(...votes));
 
 const randomAnecdote = () => {
   let randomNumber = Math.floor(Math.random() * 7) + 1;
@@ -32,11 +32,14 @@ const handleVote = () => {
   return (
   
     <div>
+      <h3>Anecdote of the day</h3>
       {anecdotes[selected]}
       <p>Has {votes[selected]} votes</p>
       <button style={{display: 'block'}} onClick={randomAnecdote}>next anecdote</button>
       <button style={{display: 'block'}} onClick={handleVote}>vote</button>
-    
+      <h3>Anecdote with most votes</h3>
+      {anecdotes[biggest]}
+    {votes[biggest]}
     </div>
   )
 }
