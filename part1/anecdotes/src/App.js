@@ -39,7 +39,7 @@ const handleVote = () => {
       <button style={{display: 'block'}} onClick={handleVote}>vote</button>
       <h3>Anecdote with most votes</h3>
       {anecdotes[biggest]}
-    {votes[biggest]}
+    <p>{votes[biggest]}</p>
     </div>
   )
 }
