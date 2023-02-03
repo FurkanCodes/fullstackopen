@@ -3,12 +3,12 @@ import Header from "./Header";
 import Content from "./Content";
 import Total from "./Total";
 
-function Course({ course, parts }) {
+function Course({ course }) {
   return (
     <div>
-      <Header course={course} />
-      <Content parts={parts} />
-      <Total course={course} />
+      <Header name={course.name} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 }

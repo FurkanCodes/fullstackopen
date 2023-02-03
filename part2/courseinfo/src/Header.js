@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function Header({course}) {
-  const {name} = course
-  return (
-    <h1>{name}</h1>
- 
-  )
+function Header({ name }) {
+  return <h2>{name}</h2>;
 }
 
-export default Header
+export default Header;

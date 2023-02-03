@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
 
-function Total({course}) {
+function Total({ parts }) {
+  const total = parts.reduce((acc, currentVal) => {
+    return acc + currentVal.exercises;
+  }, 0);
+
   return (
-    <div>  <p>Number of exercises {course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises }</p></div>
-  )
+    <div>
+      <p style={{ fontWeight: "bold" }}>Number of exercises {total}</p>
+    </div>
+  );
 }
 
-export default Total
+export default Total;
