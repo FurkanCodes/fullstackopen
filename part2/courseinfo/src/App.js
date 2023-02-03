@@ -1,34 +1,32 @@
-import Content from "./Content"
-import Header from "./Header"
-import Total from "./Total"
-
+import Course from "./Course";
 const App = () => {
   const course = {
-    name: 'Half Stack application development',
+    id: 1,
+    name: "Half Stack application development",
     parts: [
       {
-        name: 'Fundamentals of React',
-        exercises: 10
+        name: "Fundamentals of React",
+        exercises: 10,
+        id: 1,
       },
       {
-        name: 'Using props to pass data',
-        exercises: 7
+        name: "Using props to pass data",
+        exercises: 7,
+        id: 2,
       },
       {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+        name: "State of a component",
+        exercises: 14,
+        id: 3,
+      },
+      {
+        name: "using props to pass data2",
+        exercises: 7,
+        id: 4,
+      },
+    ],
+  };
+  return <Course course={course} parts={course.parts} />;
+};
 
-  return (
-    <div>
-     <Header course={course}/>
-      <Content  course={course}/>
-     <Total course={course}/>
-    
-    </div>
-  )
-}
-
-export default App
+export default App;

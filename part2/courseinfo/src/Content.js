@@ -1,22 +1,14 @@
-import React from 'react'
+import React from "react";
+import Part from "./Part";
 
-function Content({course}) {
-
+function Content({ parts }) {
   return (
     <div>
-
-
-      <p>
-    {course.parts[0].name} {course.parts[0].exercises}
-  </p>
-  <p>
-  {course.parts[1].name} {course.parts[1].exercises}
-  </p>
-  <p>
-  {course.parts[2].name} {course.parts[2].exercises}
-  </p> 
-  </div>
-  )
+      <Part part={parts[0]} />
+      <Part part={parts[1]} />
+      <Part part={parts[2]} />
+    </div>
+  );
 }
 
-export default Content
+export default Content;
