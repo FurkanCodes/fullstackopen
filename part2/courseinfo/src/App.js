@@ -20,7 +20,7 @@ const App = () => {
         id: 3,
       },
       {
-        name: "using props to pass data2",
+        name: "using pr123ops to pass data2",
         exercises: 7,
         id: 4,
       },
