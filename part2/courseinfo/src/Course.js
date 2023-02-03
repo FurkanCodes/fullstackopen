@@ -4,11 +4,12 @@ import Content from "./Content";
 import Total from "./Total";
 
 function Course({ course }) {
+  const { parts, name } = course;
   return (
     <div>
-      <Header name={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <Header name={name} />
+      <Content parts={parts} />
+      <Total parts={parts} />
     </div>
   );
 }
