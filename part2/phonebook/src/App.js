@@ -1,5 +1,7 @@
 import { useState } from "react";
-
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -27,13 +29,11 @@ const App = () => {
     setNewNumber("");
   };
 
-  const handleChange = (e) => {
-    console.log(e.target.value);
+  const handleChangeName = (e) => {
     setNewName(e.target.value);
   };
 
   const handleChangeNumber = (e) => {
-    console.log(e.target.value);
     setNewNumber(e.target.value);
   };
 
@@ -48,40 +48,21 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={handleSearchSubmit}>
-        search:{" "}
-        <input
-          type="text"
-          placeholder="Search here"
-          onChange={handleChangeFilter}
-          value={searchInput}
-        />
-      </form>
-
+      <Filter
+        handleChangeFilter={handleChangeFilter}
+        handleSearchSubmit={handleSearchSubmit}
+        searchInput={searchInput}
+      />
       <h2>Add new</h2>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name: <input onChange={handleChange} value={newName} />
-          <div>
-            number: <input onChange={handleChangeNumber} value={newNumber} />
-          </div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        addNewPerson={addNewPerson}
+        handleChangeName={handleChangeName}
+        newName={newName}
+        handleChangeNumber={handleChangeNumber}
+        newNumber={newNumber}
+      />
       <h2>Numbers</h2>
-      {persons
-        .filter((person) => person.name.toLowerCase().includes(searchInput))
-        .map((person) => (
-          <ol key={person.name}>
-            NAME: {person.name}
-            <br />
-            NUMBER: {person.number}
-            <br />
-            ID: {person.id}
-          </ol>
-        ))}
+      <Persons persons={persons} searchInput={searchInput} />
     </div>
   );
 };
