@@ -12,6 +12,7 @@ function Persons({ persons, searchInput }) {
             NUMBER: {person.number}
             <br />
             ID: {person.id}
+            <button>delete</button>
           </ol>
         ))}
     </div>
