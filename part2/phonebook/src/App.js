@@ -1,6 +1,6 @@
-import { logDOM } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
@@ -10,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageToggle, setMessageToggle] = useState(false);
 
   useEffect(() => {
     phoneServices.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -26,18 +28,34 @@ const App = () => {
 
   const addNewPerson = (e) => {
     e.preventDefault();
+
     const existingPerson = persons.find((p) => p.name === newName);
+
     if (existingPerson) {
       alert(
         `${newName} is already added to phonebook, would you like to replace the number?`
       );
       const changedPerson = { ...existingPerson, number: newNumber };
       const id = existingPerson.id;
-      phoneServices.updateNumber(id, changedPerson).then((returnedPerson) => {
-        setPersons(
-          persons.map((person) => (person.id !== id ? person : returnedPerson))
-        );
-      });
+      phoneServices
+        .updateNumber(id, changedPerson)
+        .then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== id ? person : returnedPerson
+            )
+          );
+        })
+        .catch((error) => {
+          setMessageToggle(false);
+          setMessage(
+            `the user '${existingPerson.name}' was already deleted from server`
+          );
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+          setPersons(persons.filter((n) => n.id !== id));
+        });
       setNewName("");
       setNewNumber("");
       return;
@@ -53,6 +71,11 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       });
+      setMessage(`${newName} added!`);
+      setMessageToggle(true);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     }
   };
 
@@ -75,6 +98,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification messageToggle={messageToggle} message={message} />
+
       <Filter
         handleChangeFilter={handleChangeFilter}
         handleSearchSubmit={handleSearchSubmit}
