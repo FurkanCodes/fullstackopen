@@ -31,6 +31,8 @@ const App = () => {
       alert(
         `${newName} is already added to phonebook, would you like to replace the number?`
       );
+      console.log(existingPerson);
+
       const changedPerson = { ...existingPerson, number: newNumber };
       const id = existingPerson.id;
       phoneServices.updateNumber(id, changedPerson).then((returnedPerson) => {
@@ -41,18 +43,19 @@ const App = () => {
       setNewName("");
       setNewNumber("");
       return;
-    }
-    const newPersonObj = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    };
+    } else {
+      const newPersonObj = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1,
+      };
 
-    phoneServices.createPerson(newPersonObj).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
+      phoneServices.createPerson(newPersonObj).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
+    }
   };
 
   const handleChangeName = (e) => {
