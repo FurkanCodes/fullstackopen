@@ -31,8 +31,6 @@ const App = () => {
       alert(
         `${newName} is already added to phonebook, would you like to replace the number?`
       );
-      console.log(existingPerson);
-
       const changedPerson = { ...existingPerson, number: newNumber };
       const id = existingPerson.id;
       phoneServices.updateNumber(id, changedPerson).then((returnedPerson) => {
