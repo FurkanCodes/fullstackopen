@@ -1,6 +1,6 @@
 import React from "react";
 
-function Persons({ persons, searchInput }) {
+function Persons({ persons, searchInput, deletePerson }) {
   return (
     <div>
       {persons
@@ -12,7 +12,7 @@ function Persons({ persons, searchInput }) {
             NUMBER: {person.number}
             <br />
             ID: {person.id}
-            <button>delete</button>
+            <button onClick={() => deletePerson(person.id)}>delete</button>
           </ol>
         ))}
     </div>

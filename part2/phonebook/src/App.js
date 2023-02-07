@@ -1,3 +1,4 @@
+import { logDOM } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
@@ -13,6 +14,15 @@ const App = () => {
   useEffect(() => {
     phoneServices.getAll().then((initialPersons) => setPersons(initialPersons));
   }, []);
+
+  const deletePerson = async (id) => {
+    const personName = persons.find((person) => person.id === id).name;
+    if (window.confirm(`"do you want to delete ${personName}"`)) {
+      phoneServices.deletePerson(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
+    }
+  };
 
   const addNewPerson = (e) => {
     e.preventDefault();
@@ -66,7 +76,11 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} searchInput={searchInput} />
+      <Persons
+        deletePerson={deletePerson}
+        persons={persons}
+        searchInput={searchInput}
+      />
     </div>
   );
 };
