@@ -2,21 +2,18 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
 
+import phoneServices from "./services/services";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  const hook = () => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
-  };
+  useEffect(() => {
+    phoneServices.getAll().then((initialPersons) => setPersons(initialPersons));
+  }, []);
 
-  useEffect(hook, []);
   const addNewPerson = (e) => {
     e.preventDefault();
     if (persons.find((p) => p.name === newName)) {
@@ -28,9 +25,12 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-    setPersons(persons.concat(newPersonObj));
-    setNewName("");
-    setNewNumber("");
+
+    phoneServices.createPerson(newPersonObj).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const handleChangeName = (e) => {
