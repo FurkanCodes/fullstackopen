@@ -15,10 +15,16 @@ const deletePerson = async (id) => {
   const request = axios.delete(`${baseUrl}/${id}`);
   return request.then((response) => response.data);
 };
+
+const updateNumber = async (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then((response) => response.data);
+};
 const phoneServices = {
   getAll,
   createPerson,
   deletePerson,
+  updateNumber,
 };
 
 export default phoneServices;
