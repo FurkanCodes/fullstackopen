@@ -8,7 +8,7 @@ function App() {
   const [country, setCountry] = useState([]);
 
   const [isLoading, setLoading] = useState(true);
-  const wApi = process.env.REACT_APP_W_API;
+
   useEffect(() => {
     setLoading(true);
     const getData = async () => {
@@ -38,7 +38,7 @@ function App() {
         ) : (
           <>
             <form>
-              <h1>find countries</h1>
+              <h1>Find Countries</h1>
 
               <input value={countryName} onChange={handleChange} />
             </form>

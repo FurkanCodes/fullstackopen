@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import Weather from "./Weather";
-
+import "../App.css";
 function Country({ country }) {
   const [show, setShow] = useState(false);
   const [weatherData, setWeatherData] = useState();
@@ -40,7 +40,7 @@ function Country({ country }) {
   }
 
   return (
-    <div>
+    <div className="container">
       {name.common}
       <button onClick={() => setShow(!show)}>{show ? "hide" : "show"}</button>
 
