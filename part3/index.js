@@ -68,13 +68,25 @@ const getRandomId = () => {
 // creates a  new phonebook entryu
 app.post("/api/persons/", (request, response) => {
   const body = request.body;
-  console.log(body);
 
   const person = {
     id: getRandomId(),
     name: body.name,
     number: body.number,
   };
+  if (!body.number || !body.name) {
+    return response.status(422).json({
+      error: "please input a number and a name ",
+    });
+  }
+
+  if (persons.find((person) => person.name === body.name)) {
+    console.log("name must be unique");
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
   persons = persons.concat(person);
   response.json(person);
 });
