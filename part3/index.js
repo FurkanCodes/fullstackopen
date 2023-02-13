@@ -57,6 +57,28 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204);
   response.send(`deleted ${id}`).end();
 });
+
+const getRandomId = () => {
+  const maxId =
+    persons.length > 0
+      ? Math.floor(Math.random(...persons.map((n) => n.id)) * 1000)
+      : 0;
+  return maxId + 1;
+};
+// creates a  new phonebook entryu
+app.post("/api/persons/", (request, response) => {
+  const body = request.body;
+  console.log(body);
+
+  const person = {
+    id: getRandomId(),
+    name: body.name,
+    number: body.number,
+  };
+  persons = persons.concat(person);
+  response.json(person);
+});
+
 app.get("/info", (request, response) => {
   const utcDate = new Date(Date.now());
   response.send(
