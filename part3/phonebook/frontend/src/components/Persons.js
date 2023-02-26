@@ -11,7 +11,6 @@ function Persons({ persons, searchInput, deletePerson }) {
             <br />
             NUMBER: {person.number}
             <br />
-            ID: {person.id}
             <button onClick={() => deletePerson(person.id)}>delete</button>
           </ol>
         ))}

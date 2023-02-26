@@ -4,6 +4,7 @@ const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 
+const Person = require("./models/person");
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
@@ -38,8 +39,11 @@ app.get("/", (request, response) => {
 
 //fetches all persons
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((person) => {
+    response.json(person);
+  });
 });
+
 //fetches a person based on ID
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
@@ -77,11 +81,6 @@ const getRandomId = () => {
 app.post("/api/persons/", (request, response) => {
   const body = request.body;
 
-  const person = {
-    id: getRandomId(),
-    name: body.name,
-    number: body.number,
-  };
   if (!body.number || !body.name) {
     return response.status(422).json({
       error: "please input a number and a name ",
@@ -94,9 +93,13 @@ app.post("/api/persons/", (request, response) => {
       error: "name must be unique",
     });
   }
-
-  persons = persons.concat(person);
-  response.json(person);
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 morgan.token("body", (req) => {
