@@ -10,6 +10,16 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan(":method :url :body"));
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
 let persons = [
   {
     id: 1,
@@ -45,29 +55,33 @@ app.get("/api/persons", (request, response) => {
 });
 
 //fetches a person based on ID
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404);
-    response
-      .send(
-        `error 404 <br />
-       Could not find the person with the id of ${id}`
-      )
-      .end();
-  }
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+
+  // const person = persons.find((person) => person.id === id);
 });
 
 //deletes a person
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((note) => note.id !== id);
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+      console.log(`deleted ${request.params.id}`);
+    })
+    .catch((error) => next(error));
+  // const id = Number(request.params.id);
+  // persons = persons.filter((note) => note.id !== id);
 
-  response.status(204);
-  response.send(`deleted ${id}`).end();
+  // response.status(204);
 });
 
 const getRandomId = () => {
@@ -106,6 +120,19 @@ morgan.token("body", (req) => {
   return JSON.stringify(req.body);
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
 app.get("/info", (request, response) => {
   const utcDate = new Date(Date.now());
   response.send(
@@ -119,3 +146,5 @@ const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.use(errorHandler);
