@@ -15,6 +15,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(404).json({ error: error.message });
   }
 
   next(error);
@@ -66,8 +68,6 @@ app.get("/api/persons/:id", (request, response, next) => {
       }
     })
     .catch((error) => next(error));
-
-  // const person = persons.find((person) => person.id === id);
 });
 
 //deletes a person
@@ -78,21 +78,10 @@ app.delete("/api/persons/:id", (request, response, next) => {
       console.log(`deleted ${request.params.id}`);
     })
     .catch((error) => next(error));
-  // const id = Number(request.params.id);
-  // persons = persons.filter((note) => note.id !== id);
-
-  // response.status(204);
 });
 
-const getRandomId = () => {
-  const maxId =
-    persons.length > 0
-      ? Math.floor(Math.random(...persons.map((n) => n.id)) * 1000)
-      : 0;
-  return maxId + 1;
-};
 // creates a  new phonebook entryu
-app.post("/api/persons/", (request, response) => {
+app.post("/api/persons/", (request, response, next) => {
   const body = request.body;
 
   if (!body.number || !body.name) {
@@ -101,19 +90,22 @@ app.post("/api/persons/", (request, response) => {
     });
   }
 
-  if (persons.find((person) => person.name === body.name)) {
-    console.log("name must be unique");
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  // if (persons.find((person) => person.name === body.name)) {
+  //   console.log("name must be unique");
+  //   return response.status(400).json({
+  //     error: "name must be unique",
+  //   });
+  // }
   const person = new Person({
     name: body.name,
     number: body.number,
   });
-  person.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 morgan.token("body", (req) => {
@@ -126,7 +118,11 @@ app.put("/api/persons/:id", (request, response, next) => {
     name: body.name,
     number: body.number,
   };
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((updatedPerson) => {
       response.json(updatedPerson);
     })

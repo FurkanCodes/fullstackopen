@@ -11,7 +11,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [message, setMessage] = useState("");
-  const [messageToggle, setMessageToggle] = useState(false);
+
+  const [notificationType, setNotificationType] = useState("");
 
   useEffect(() => {
     phoneServices.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -45,16 +46,18 @@ const App = () => {
               person.id !== id ? person : returnedPerson
             )
           );
-        })
-        .catch((error) => {
-          setMessageToggle(false);
-          setMessage(
-            `the user '${existingPerson.name}' was already deleted from server`
-          );
+          setMessage(`${changedPerson.name}'s number has changed!`);
+          setNotificationType("success");
           setTimeout(() => {
             setMessage(null);
           }, 5000);
-          setPersons(persons.filter((n) => n.id !== id));
+        })
+        .catch((error) => {
+          setMessage(`${error.response.data.error}`);
+          setNotificationType("error");
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         });
       setNewName("");
       setNewNumber("");
@@ -66,16 +69,29 @@ const App = () => {
         id: persons.length + 1,
       };
 
-      phoneServices.createPerson(newPersonObj).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
-      });
-      setMessage(`${newName} added!`);
-      setMessageToggle(true);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      phoneServices
+        .createPerson(newPersonObj)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+
+          setMessage(`${returnedPerson.name} added!`);
+
+          setNotificationType("success");
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          setMessage(`${error.response.data.error}`);
+
+          setNotificationType("error");
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        });
     }
   };
 
@@ -98,7 +114,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification messageToggle={messageToggle} message={message} />
+      <Notification notificationType={notificationType} message={message} />
 
       <Filter
         handleChangeFilter={handleChangeFilter}
