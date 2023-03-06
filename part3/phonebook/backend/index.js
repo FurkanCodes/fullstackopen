@@ -84,18 +84,12 @@ app.delete("/api/persons/:id", (request, response, next) => {
 app.post("/api/persons/", (request, response, next) => {
   const body = request.body;
 
-  if (!body.number || !body.name) {
-    return response.status(422).json({
-      error: "please input a number and a name ",
-    });
-  }
-
-  // if (persons.find((person) => person.name === body.name)) {
-  //   console.log("name must be unique");
-  //   return response.status(400).json({
-  //     error: "name must be unique",
+  // if (!body.number || !body.name) {
+  //   return response.status(422).json({
+  //     error: "please input a number and a name ",
   //   });
   // }
+
   const person = new Person({
     name: body.name,
     number: body.number,
