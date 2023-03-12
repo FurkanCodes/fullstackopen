@@ -6,7 +6,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "thşrd post",
+    "title": "fifth post",
     "author": "3",
-    "url": "https://example.com/blogposts/blogid"
+    "url": "https://example.com/blogposts/blogid",
+    "likes": 4
 }
