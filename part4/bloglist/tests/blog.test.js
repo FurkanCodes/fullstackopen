@@ -92,3 +92,14 @@ describe("favorite blog", () => {
     });
   });
 });
+
+describe("most blogs", () => {
+  test("when list has only one blog, equals that author", () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+
+    expect(result).toEqual({
+      author: "Edsger W. Dijkstra",
+      blogs: 1,
+    });
+  });
+});
