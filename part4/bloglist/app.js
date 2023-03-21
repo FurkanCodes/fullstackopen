@@ -3,13 +3,13 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const blogsRouter = require("./controller/blogs");
-
+require("express-async-errors");
 const middleware = require("./utils/middleware");
 const { info, error } = require("./utils/logger");
-const { MONGODB } = require("./utils/config");
+const { MONGODB_URI } = require("./utils/config");
 
 mongoose
-  .connect(MONGODB)
+  .connect(MONGODB_URI)
   .then((result) => {
     info("connected to MongoDB");
   })
