@@ -4,6 +4,7 @@ const app = require("../app");
 const helper = require("../tests/blog_helper");
 const api = supertest(app);
 const Blog = require("../models/blog");
+const blog = require("../models/blog");
 beforeEach(async () => {
   await Blog.deleteMany({});
   console.log("cleared");
@@ -12,6 +13,17 @@ beforeEach(async () => {
   const promiseArr = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArr);
   console.log("done");
+});
+test("all blogs are returned", async () => {
+  const response = await api.get("/api/blogs");
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
+});
+test('Blog post unique identifier property is named "id"', async () => {
+  const blogPost = await helper.blogsInDb();
+
+  const firstBlog = blogPost[0];
+
+  expect(firstBlog.id).toBeDefined();
 });
 
 // test("blogs are returned as json", async () => {
@@ -30,11 +42,6 @@ beforeEach(async () => {
 //   const response = await api.get("/api/blogs");
 //   expect(response.body[0].author).toBe("FURKAN1!1");
 // });
-
-test("all blogs are returned", async () => {
-  const response = await api.get("/api/blogs");
-  expect(response.body).toHaveLength(helper.initialBlogs.length);
-});
 
 // test("a specific blog in returned blogs", async () => {
 //   const response = await api.get("/api/blogs");
