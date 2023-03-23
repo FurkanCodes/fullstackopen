@@ -26,6 +26,24 @@ test('Blog post unique identifier property is named "id"', async () => {
   expect(firstBlog.id).toBeDefined();
 });
 
+test("a valid blog can be added", async () => {
+  const newBlog = {
+    title: "welcome to my life",
+    author: "leslie",
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const titles = blogsAtEnd.map((b) => b.title);
+  expect(titles).toContain("welcome to my life");
+});
+
 // test("blogs are returned as json", async () => {
 //   await api
 //     .get("/api/blogs")
@@ -47,24 +65,6 @@ test('Blog post unique identifier property is named "id"', async () => {
 //   const response = await api.get("/api/blogs");
 //   const titles = response.body.map((res) => res.title);
 //   expect(titles).toContain("heyyy");
-// });
-
-// test("a valid blog can be added", async () => {
-//   const newBlog = {
-//     title: "welcome to my life",
-//     author: "leslie",
-//   };
-//   await api
-//     .post("/api/blogs")
-//     .send(newBlog)
-//     .expect(201)
-//     .expect("Content-Type", /application\/json/);
-
-//   const blogsAtEnd = await helper.blogsInDb();
-//   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
-
-//   const titles = blogsAtEnd.map((b) => b.title);
-//   expect(titles).toContain("welcome to my life");
 // });
 
 // test("blog without title is not added", async () => {
