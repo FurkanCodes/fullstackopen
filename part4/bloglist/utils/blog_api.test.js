@@ -77,53 +77,53 @@ test("blog without title or url is not added", async () => {
   expect(response.status).toBe(400);
 });
 
-// test("blogs are returned as json", async () => {
-//   await api
-//     .get("/api/blogs")
-//     .expect(200)
-//     .expect("Content-Type", /application\/json/);
-// });
+test("blogs are returned as json", async () => {
+  await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+});
 
-// test("there are two blogs", async () => {
-//   const response = await api.get("/api/blogs");
-//   expect(response.body).toHaveLength(2);
-// });
+test("there are two blogs", async () => {
+  const response = await api.get("/api/blogs");
+  expect(response.body).toHaveLength(2);
+});
 
-// test("a specific blog in returned blogs", async () => {
-//   const response = await api.get("/api/blogs");
-//   const titles = response.body.map((res) => res.title);
-//   expect(titles).toContain("heyyy");
-// });
+test("a specific blog in returned blogs", async () => {
+  const response = await api.get("/api/blogs");
+  const titles = response.body.map((res) => res.title);
+  expect(titles).toContain("heyyy");
+});
 
-// test("a valid blog can be added", async () => {
-//   const newBlog = {
-//     title: "welcome to my life",
-//     author: "leslie",
-//   };
-//   await api
-//     .post("/api/blogs")
-//     .send(newBlog)
-//     .expect(201)
-//     .expect("Content-Type", /application\/json/);
+test("a valid blog can be added", async () => {
+  const newBlog = {
+    title: "welcome to my life",
+    author: "leslie",
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
 
-//   const blogsAtEnd = await helper.blogsInDb();
-//   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-//   const titles = blogsAtEnd.map((b) => b.title);
-//   expect(titles).toContain("welcome to my life");
-// });
+  const titles = blogsAtEnd.map((b) => b.title);
+  expect(titles).toContain("welcome to my life");
+});
 
-// test("a specific blog can be viewed", async () => {
-//   const blogsAtStart = await helper.blogsInDb();
+test("a specific blog can be viewed", async () => {
+  const blogsAtStart = await helper.blogsInDb();
 
-//   const blogToView = blogsAtStart[0];
+  const blogToView = blogsAtStart[0];
 
-//   const resultBlog = await api
-//     .get(`/api/blogs/${blogToView.id}`)
-//     .expect(200)
-//     .expect("Content-Type", /application\/json/);
-//   expect(resultBlog.body).toEqual(blogToView);
-// });
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+  expect(resultBlog.body).toEqual(blogToView);
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
