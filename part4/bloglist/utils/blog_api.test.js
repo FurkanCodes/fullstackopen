@@ -56,6 +56,27 @@ it("should create a blog with likes set to 0 if not provided", async () => {
   expect(response.status).toBe(201);
   expect(response.body.likes).toBe(0);
 });
+
+test("blog without title is not added", async () => {
+  const newBlog = {
+    author: "Test author",
+    url: "https://example.com",
+    likes: 0,
+  };
+  const response = await api.post("/api/blogs").send(newBlog);
+
+  expect(response.status).toBe(400);
+});
+
+test("blog without title or url is not added", async () => {
+  const newBlog = {
+    author: "Test author",
+    likes: 0,
+  };
+  const response = await api.post("/api/blogs").send(newBlog);
+  expect(response.status).toBe(400);
+});
+
 // test("blogs are returned as json", async () => {
 //   await api
 //     .get("/api/blogs")
@@ -66,11 +87,6 @@ it("should create a blog with likes set to 0 if not provided", async () => {
 // test("there are two blogs", async () => {
 //   const response = await api.get("/api/blogs");
 //   expect(response.body).toHaveLength(2);
-// });
-
-// test("first author is FURKAN1!1", async () => {
-//   const response = await api.get("/api/blogs");
-//   expect(response.body[0].author).toBe("FURKAN1!1");
 // });
 
 // test("a specific blog in returned blogs", async () => {
@@ -95,17 +111,6 @@ it("should create a blog with likes set to 0 if not provided", async () => {
 
 //   const titles = blogsAtEnd.map((b) => b.title);
 //   expect(titles).toContain("welcome to my life");
-// });
-
-// test("blog without title is not added", async () => {
-//   const newBlog = {
-//     author: "",
-//   };
-//   await api.post("/api/blogs").send(newBlog).expect(400);
-
-//   const blogsAtEnd = await helper.blogsInDb();
-
-//   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 // });
 
 // test("a specific blog can be viewed", async () => {

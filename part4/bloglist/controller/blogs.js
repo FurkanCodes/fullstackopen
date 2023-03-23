@@ -17,12 +17,13 @@ blogsRouter.get("/:id", async (req, res) => {
 });
 
 blogsRouter.post("/", async (req, res, next) => {
-  let data = req.body;
+  let { title, author, url, likes } = req.body;
+
   const blog = new Blog({
-    title: data.title,
-    author: data.author,
-    url: data.url,
-    likes: data.likes || 0,
+    title: title,
+    author: author,
+    url: url,
+    likes: likes || 0,
   });
   const savedBlog = await blog.save();
   res.status(201).json(savedBlog);
