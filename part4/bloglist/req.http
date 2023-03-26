@@ -9,10 +9,11 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "1 23523523523523523post",
-    "author": "se23523523525vd52352523525235235e",
+    "title": "1 214124",
+    "author": "12",
     "url": "https://example.com/blogposts/blogid",
-    "likes": 1
+    "likes": 1,
+    "userId": "64207234afed5e2d1ce6b40d"
 }
 
 ###
@@ -35,7 +36,7 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "username": "",
-    "name": "",
+    "username": "asfasfasf",
+    "name": "asfasf",
     "password": "2231"
 }
