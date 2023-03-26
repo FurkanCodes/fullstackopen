@@ -5,16 +5,7 @@ require("express-async-errors");
 
 const jwt = require("jsonwebtoken");
 
-const getTokenFrom = (req) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get("/", async (req, res) => {
-  getTokenFrom(req);
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   res.json(blogs);
 });
@@ -31,8 +22,8 @@ blogsRouter.get("/:id", async (req, res) => {
 
 blogsRouter.post("/", async (req, res) => {
   let { title, author, url, likes } = req.body;
-  const token = getTokenFrom(req);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
   if (!decodedToken.id) {
     return response.status(404).json({ error: "token missing or invalid" });
