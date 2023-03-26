@@ -55,7 +55,7 @@ blogsRouter.delete("/:id", async (req, res) => {
     await Blog.findByIdAndDelete(id);
     res.status(204).end();
   } else {
-    return res.status(401).json({ error: "You cannot delete this blog" });
+    return res.status(401).json({ error: "You cannot delete" });
   }
 });
 
