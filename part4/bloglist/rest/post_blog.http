@@ -1,0 +1,13 @@
+
+
+POST http://localhost:3001/api/blogs 
+Content-Type: application/json 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjExMjI0IiwiaWQiOiI2NDIwYTZkMDVkYTEzZDNlMGMxNTg2YjkiLCJpYXQiOjE2Nzk4NjM5NjF9.XLUuJJqgUXRrKNRq43YA62YZiTp8MwfOceW6ESW57Kk
+
+{
+    "title": "124", 
+    "author": "authaa", 
+    "url": "urli", 
+    "likes": 1
+
+}
