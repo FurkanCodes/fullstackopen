@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Notifications from "./components/Notifications";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -9,6 +10,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const App = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem("blogLoggedUser", JSON.stringify(user));
@@ -33,10 +36,12 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
+      setMessage(error.message + " " + "User name or password is wrong");
       setTimeout(() => {
-        alert("wrong username and password");
-      });
+        setMessage(null);
+      }, 5000);
     }
+    setMessage("WELCOME");
   };
 
   const createBlog = async (e) => {
@@ -45,9 +50,14 @@ const App = () => {
       title: newTitle,
       author: newAuthor,
     };
+
     const newBlog = await blogService.create(newBlobObj);
     setBlogs(blogs.concat(newBlog));
 
+    setMessage("a blog added");
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
     console.log(newTitle, newAuthor);
   };
 
@@ -103,7 +113,7 @@ const App = () => {
   return (
     <div>
       <h2>Login</h2>
-
+      <Notifications message={message} />
       {!user && loginForm()}
       {user && (
         <div>
