@@ -10,6 +10,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const [newUrl, setNewUrl] = useState("");
   const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
 
@@ -49,6 +50,7 @@ const App = () => {
     const newBlobObj = {
       title: newTitle,
       author: newAuthor,
+      url: newUrl,
     };
 
     const newBlog = await blogService.create(newBlobObj);
@@ -103,6 +105,12 @@ const App = () => {
             value={newAuthor}
             onChange={({ target }) => setNewAuthor(target.value)}
           />
+          url
+          <input
+            type="text"
+            value={newUrl}
+            onChange={({ target }) => setNewUrl(target.value)}
+          ></input>
           <button type="submit">post</button>
         </div>
       </form>
