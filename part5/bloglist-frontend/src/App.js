@@ -5,14 +5,13 @@ import loginService from "./services/login";
 import Notifications from "./components/Notifications";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
+import BlogForm from "./components/BlogForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newTitle, setNewTitle] = useState("");
-  const [newUrl, setNewUrl] = useState("");
+
   const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
 
@@ -47,22 +46,14 @@ const App = () => {
     setMessage("WELCOME");
   };
 
-  const createBlog = async (e) => {
-    e.preventDefault();
-    const newBlobObj = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    };
-
-    const newBlog = await blogService.create(newBlobObj);
+  const addBlog = async (blogObject) => {
+    const newBlog = await blogService.create(blogObject);
     setBlogs(blogs.concat(newBlog));
 
     setMessage("a blog added");
     setTimeout(() => {
       setMessage(null);
     }, 5000);
-    console.log(newTitle, newAuthor);
   };
 
   const logOut = () => {
@@ -88,30 +79,9 @@ const App = () => {
 
   const blogForm = () => (
     <div>
-      <form onSubmit={createBlog}>
-        <div>
-          title
-          <input
-            type="text"
-            value={newTitle}
-            onChange={({ target }) => setNewTitle(target.value)}
-          />
-          author
-          <input
-            type="text"
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-          url
-          <input
-            type="text"
-            value={newUrl}
-            onChange={({ target }) => setNewUrl(target.value)}
-          ></input>
-          <button type="submit">post</button>
-        </div>
-      </form>
-      <button onClick={logOut}>log out</button>
+      <Togglable buttonLabel={" new blog"}>
+        <BlogForm createBlog={addBlog} logOut={logOut} />
+      </Togglable>
     </div>
   );
 
