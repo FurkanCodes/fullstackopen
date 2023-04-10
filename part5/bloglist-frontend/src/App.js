@@ -3,6 +3,8 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Notifications from "./components/Notifications";
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -67,27 +69,22 @@ const App = () => {
     window.localStorage.removeItem("blogLoggedUser");
     setUser(null);
   };
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
+
+  const loginForm = () => {
+    return (
       <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-        username
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-        <button type="submit">login</button>
+        <Togglable buttonLabel="login">
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+          />
+        </Togglable>
       </div>
-    </form>
-  );
+    );
+  };
 
   const blogForm = () => (
     <div>
