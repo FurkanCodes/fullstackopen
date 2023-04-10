@@ -34,7 +34,11 @@ const Blog = ({ blog }) => {
           {blog.likes}
         </div>
       </ol>
-      <button onClick={toggleVisibility}>view details</button>
+      {visible ? (
+        <button onClick={toggleVisibility}>hide details</button>
+      ) : (
+        <button onClick={toggleVisibility}>view details</button>
+      )}
     </div>
   );
 };
