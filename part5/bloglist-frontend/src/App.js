@@ -38,7 +38,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
-      setMessage(error.message + " " + "User name or password is wrong");
+      setMessage(error.message + "User name or password is wrong");
       setTimeout(() => {
         setMessage(null);
       }, 5000);
@@ -46,7 +46,7 @@ const App = () => {
     setMessage("WELCOME");
   };
 
-  const addBlog = async (blogObject) => {
+  const createBlog = async (blogObject) => {
     const newBlog = await blogService.create(blogObject);
     setBlogs(blogs.concat(newBlog));
 
@@ -54,6 +54,18 @@ const App = () => {
     setTimeout(() => {
       setMessage(null);
     }, 5000);
+  };
+
+  const updateLikes = async (id, updatedBlog) => {
+    try {
+      const response = await blogService.update(id, updatedBlog);
+
+      setBlogs(
+        blogs.map((blog) => (blog.id === response.id ? response : blog))
+      );
+    } catch (exception) {
+      setMessage("error" + exception.response.data.error);
+    }
   };
 
   const logOut = () => {
@@ -80,7 +92,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <Togglable buttonLabel={" new blog"}>
-        <BlogForm createBlog={addBlog} logOut={logOut} />
+        <BlogForm createBlog={createBlog} logOut={logOut} />
       </Togglable>
     </div>
   );
@@ -96,7 +108,7 @@ const App = () => {
           {blogForm()}
           <h2>blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
           ))}
         </div>
       )}
