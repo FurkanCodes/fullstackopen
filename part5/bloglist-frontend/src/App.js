@@ -76,9 +76,10 @@ const App = () => {
   const deletePost = async (id) => {
     const blogName = blogs.find((blog) => blog.id === id);
     if (window.confirm(`Want to delete '${blogName.title}'`)) {
-      blogService.deleteBlog(id);
-      setBlogs(blogs.filter((blog) => blog.id !== id));
+      blogService.deleteBlog(blogName.id);
     }
+
+    setBlogs(blogs.filter((blog) => blog.id !== blogName.id));
   };
 
   const logOut = () => {
@@ -126,6 +127,7 @@ const App = () => {
               blog={blog}
               updateLikes={updateLikes}
               deletePost={deletePost}
+              username={user.username}
             />
           ))}
         </div>
