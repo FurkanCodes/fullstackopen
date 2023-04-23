@@ -24,9 +24,14 @@ const App = () => {
     }
   }, []);
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    getAllBlogs();
   }, []);
 
+  const getAllBlogs = async () => {
+    const blogs = await blogService.getAll();
+    blogs.sort((a, b) => (a.likes > b.likes ? -1 : 1));
+    setBlogs(blogs);
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
