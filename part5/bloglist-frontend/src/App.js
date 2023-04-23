@@ -73,6 +73,14 @@ const App = () => {
     }
   };
 
+  const deletePost = async (id) => {
+    const blogName = blogs.find((blog) => blog.id === id);
+    if (window.confirm(`Want to delete '${blogName.title}'`)) {
+      blogService.deleteBlog(id);
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+    }
+  };
+
   const logOut = () => {
     window.localStorage.removeItem("blogLoggedUser");
     setUser(null);
@@ -113,7 +121,12 @@ const App = () => {
           {blogForm()}
           <h2>blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateLikes={updateLikes}
+              deletePost={deletePost}
+            />
           ))}
         </div>
       )}
