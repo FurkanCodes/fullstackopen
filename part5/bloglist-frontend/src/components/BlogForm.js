@@ -23,6 +23,7 @@ const BlogForm = ({ createBlog, logOut }) => {
         <div>
           title
           <input
+            placeholder="title"
             type="text"
             value={newTitle}
             onChange={({ target }) => setNewTitle(target.value)}

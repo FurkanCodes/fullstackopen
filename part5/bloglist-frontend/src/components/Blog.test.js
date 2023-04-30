@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import Blog, { updateLikes, handleLike } from "./Blog";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "@testing-library/user-event";
+
 describe("blog tests", () => {
   const blog = {
     title: "first test",
@@ -11,7 +12,6 @@ describe("blog tests", () => {
     likes: 7,
   };
   let mockUpdateBlog = jest.fn();
-  let mockDeleteBlog = jest.fn();
   test("renders blog title and author", () => {
     const { container } = render(<Blog blog={blog} />);
     const title = container.querySelector(".blog-title");
