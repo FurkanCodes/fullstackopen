@@ -32,20 +32,23 @@ const Blog = ({ blog, updateLikes, deletePost, username }) => {
         <li>
           <p> Title </p>
         </li>
-        <h2>{blog.title}</h2>
+        <h2 className="blog-title">{blog.title}</h2>
         <div style={showWhenVisible}>
           <li>
             <p> Author </p>
           </li>
-          <h2>{blog.author}</h2>
-          <li>
-            <p> Likes </p>
-          </li>
-          <h2>{blog.likes}</h2>
+          <h2 className="blog-author">{blog.author}</h2>
+          <div>
+            <li>
+              <p> Likes </p>
+            </li>
+            <h2>{blog.likes}</h2>
+            <h2>URL :{blog.url}</h2>
+          </div>
           <button onClick={handleLike}> add like</button>
-          {blog.user.username === username && (
+          {/* {blog.user.username === username && (
             <button onClick={() => deletePost(blog.id)}> delete</button>
-          )}
+          )} */}
         </div>
       </ol>
       {visible ? (

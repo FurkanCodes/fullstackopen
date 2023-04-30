@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
@@ -118,9 +120,9 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          {user.username} logged in
+          <h1 className="active-user">{user.username} logged in</h1>
           {blogForm()}
-          <h2>blogs</h2>
+          <h2 className="header-title">blogs</h2>
           {blogs.map((blog) => (
             <Blog
               key={blog.id}
