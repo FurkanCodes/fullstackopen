@@ -11,6 +11,7 @@ const Blog = ({ blog, updateLikes, deletePost, username }) => {
   const [visible, setVisible] = useState(false);
 
   const showWhenVisible = { display: visible ? "" : "none" };
+  const hideWhenVisible = { display: visible ? "none" : "" };
 
   const toggleVisibility = () => {
     setVisible(!visible);
@@ -27,13 +28,13 @@ const Blog = ({ blog, updateLikes, deletePost, username }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blogAll">
       <ol>
         <li>
           <p> Title </p>
         </li>
         <h2 className="blog-title">{blog.title}</h2>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className="togglableContent">
           <li>
             <p> Author </p>
           </li>
@@ -42,10 +43,13 @@ const Blog = ({ blog, updateLikes, deletePost, username }) => {
             <li>
               <p> Likes </p>
             </li>
+
             <h2>{blog.likes}</h2>
             <h2>URL :{blog.url}</h2>
           </div>
-          <button onClick={handleLike}> add like</button>
+          <button className="like-button" onClick={handleLike}>
+            add like
+          </button>
           {/* {blog.user.username === username && (
             <button onClick={() => deletePost(blog.id)}> delete</button>
           )} */}
