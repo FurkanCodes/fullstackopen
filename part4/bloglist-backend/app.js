@@ -1,32 +1,44 @@
+const config = require("./utils/config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const logger = require("./utils/logger");
 const mongoose = require("mongoose");
-const blogsRouter = require("./controller/blogs");
+require("express-async-errors");
+
+const notesRouter = require("./controller/blogs");
 const usersRouter = require("./controller/users");
 const loginRouter = require("./controller/login");
-require("express-async-errors");
+
+if (process.env.NODE_ENV === "test") {
+  const testingRouter = require("./controller/testing");
+  app.use("/api/testing", testingRouter);
+}
+
 const middleware = require("./utils/middleware");
-const { info, error } = require("./utils/logger");
-const { MONGODB_URI } = require("./utils/config");
+
+mongoose.set("strictQuery", false);
+
+logger.info("connecting to", config.MONGODB_URI);
 
 mongoose
-  .connect(MONGODB_URI)
-  .then((result) => {
-    info("connected to MongoDB");
+  .connect(config.MONGODB_URI)
+  .then(() => {
+    logger.info("connected to MongoDB");
   })
-  .catch((err) => {
-    error("error connecting", err.message);
+  .catch((error) => {
+    logger.error("error connecting to MongoDB:", error.message);
   });
 
 app.use(cors());
+app.use(express.static("build"));
 app.use(express.json());
-
 app.use(middleware.requestLogger);
-app.use(middleware.tokenExtractor);
-app.use("/api/blogs", blogsRouter);
+
+app.use("/api/blogs", notesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 

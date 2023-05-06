@@ -1,7 +1,7 @@
-const app = require("./app");
-const { info, error } = require("./utils/logger");
-const { PORT } = require("./utils/config");
+const app = require("./app"); // varsinainen Express-sovellus
+const config = require("./utils/config");
+const logger = require("./utils/logger");
 
-app.listen(PORT, () => {
-  info(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`);
 });
