@@ -25,7 +25,8 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case "NEW": {
-      return console.log("first");
+      const anecdote = action.data;
+      return state.concat(anecdote);
     }
     case "VOTE": {
       const id = action.data.id;
