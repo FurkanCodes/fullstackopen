@@ -1,21 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
-
+import { vote, newAnecdote } from "./reducers/anecdoteReducer";
 const App = () => {
   const anecdotes = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const vote = (id) => {
-    console.log("vote", id);
-    return {
-      type: "VOTE",
-      data: { id },
-    };
-  };
-
-  const newAnecdote = (e) => {
-    e.preventDefault();
-    const content = e.target.note.value;
-    e.target.note.value = console.log(content);
+  const newAnecdote = (event) => {
+    event.preventDefault();
+    const content = event.target.note.value;
+    event.target.note.value = "";
+    dispatch(newAnecdote(content));
   };
 
   return (
@@ -31,11 +24,11 @@ const App = () => {
         </div>
       ))}
       <h2>create new</h2>
-      <form>
+      <form onSubmit={newAnecdote}>
         <div>
           <input name="note" />
         </div>
-        <button onClick={newAnecdote}>create</button>
+        <button> create</button>
       </form>
     </div>
   );
