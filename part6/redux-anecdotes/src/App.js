@@ -12,6 +12,12 @@ const App = () => {
     };
   };
 
+  const newAnecdote = (e) => {
+    e.preventDefault();
+    const content = e.target.note.value;
+    e.target.note.value = console.log(content);
+  };
+
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -27,9 +33,9 @@ const App = () => {
       <h2>create new</h2>
       <form>
         <div>
-          <input />
+          <input name="note" />
         </div>
-        <button>create</button>
+        <button onClick={newAnecdote}>create</button>
       </form>
     </div>
   );
