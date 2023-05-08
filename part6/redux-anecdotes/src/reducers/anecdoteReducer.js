@@ -44,7 +44,7 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export const vote = (id) => {
+export const addVote = (id) => {
   return {
     type: "VOTE",
     data: { id },
