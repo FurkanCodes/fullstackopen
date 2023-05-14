@@ -1,31 +1,29 @@
-6.3: anecdotes, step1
+6.9 Better anecdotes, step7
 
-Implement the functionality for voting anecdotes. 
-The number of votes must be saved to a Redux store.
+Implement filtering for the anecdotes that are displayed to the user.
+browser showing filtering of anecdotes
 
+Store the state of the filter in the redux store. 
+It is recommended to create a new reducer,
+ action creators, and a combined reducer 
+ for the store using the combineReducers function.
 
-6.4: anecdotes, step2
+Create a new Filter component for displaying the filter. 
+You can use the following code as a template for the component:
 
-Implement the functionality for adding new anecdotes.
-You can keep the form uncontrolled like we did earlier.
+const Filter = () => {
+  const handleChange = (event) => {
+    // input-field value is in variable event.target.value
+  }
+  const style = {
+    marginBottom: 10
+  }
 
-6.5: anecdotes, step3
+  return (
+    <div style={style}>
+      filter <input onChange={handleChange} />
+    </div>
+  )
+}
 
-Make sure that the anecdotes are ordered by the number of votes.
-6.6: anecdotes, step4
-
-If you haven't done so already,
-separate thee creation of action-objects to action creator-functions and place them in the src/reducers/anecdoteReducer.js file, so do what we have been doing since the chapter action creators.
-6.7: anecdotes, step5
-
-Separate the creation of new anecdotes into a component 
-called AnecdoteForm. 
-Move all logic for creating a new anecdote into this new component.
-6.8: anecdotes, step6
-
-Separate the rendering of the anecdote list into a 
-component called AnecdoteList. 
-Move all logic related to voting for an anecdote 
-to this new component.
-
-Now the App component should look like this:
+export default Filter
