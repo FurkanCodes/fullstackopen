@@ -8,7 +8,6 @@ const Filter = () => {
   const handleChange = (e) => {
     let input = changeInputValue(e.target.value);
     dispatch(input);
-    console.log(changeInputValue(e.target.value).payload);
   };
 
   return (
