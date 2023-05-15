@@ -1,21 +1,30 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeInputValue, selectInputValue } from "../reducers/filterReducer";
+import {
+  changeInputValue,
+  selectInputValue,
+  setFilter,
+} from "../reducers/filterSlice";
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const inputValue = useSelector(selectInputValue);
-  const handleChange = (e) => {
-    let input = changeInputValue(e.target.value);
-    dispatch(input);
-  };
+  const filter = useSelector((state) => state.anecdoteFilter.filter);
+
+  // const handleChange = (e) => {
+  //   let input = changeInputValue(e.target.value);
+  //   dispatch(input);
+  // };
 
   return (
     <div>
       {" "}
       <div>
         <h2>filter</h2>{" "}
-        <input type="text" value={inputValue} onChange={handleChange} />
+        <input
+          type="text"
+          value={filter}
+          onChange={(e) => dispatch(setFilter(e.target.value))}
+        />
       </div>
     </div>
   );
