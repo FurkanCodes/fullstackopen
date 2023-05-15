@@ -10,11 +10,6 @@ const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.anecdoteFilter.filter);
 
-  // const handleChange = (e) => {
-  //   let input = changeInputValue(e.target.value);
-  //   dispatch(input);
-  // };
-
   return (
     <div>
       {" "}

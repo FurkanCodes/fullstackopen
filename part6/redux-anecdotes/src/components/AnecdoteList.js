@@ -1,23 +1,20 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addVote, newAnecdote } from "../reducers/anecdoteReducer";
+import { addVote, newAnecdote } from "../reducers/anecdoteSlice";
 
 const AnecdoteList = () => {
   const filter = useSelector((state) => state.anecdoteFilter.filter);
-  const anecdotes = useSelector((state) => state.anecdotes);
-  console.log(filter);
-  const dispatch = useDispatch();
+  const anecdotes = useSelector((state) => state.anecdotesSlice);
 
-  const vote = (id) => {
-    console.log("vote", id);
-    dispatch(addVote(id));
-  };
-  const byVotes = (b1, b2) => b2.votes - b1.votes;
+  const dispatch = useDispatch();
+  let slicedAnecdotes = anecdotes.slice();
+  const byVotes = (b1, b2) => parseFloat(b2.votes) - parseFloat(b1.votes);
+
   return (
     <div>
       {" "}
       <h2>Anecdotes</h2>
-      {anecdotes
+      {slicedAnecdotes
         .sort(byVotes)
         .filter((a) => a.content.includes(filter))
         .map((anecdote) => (
@@ -25,7 +22,9 @@ const AnecdoteList = () => {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
+              <button onClick={() => dispatch(addVote(anecdote.id))}>
+                vote
+              </button>
             </div>
           </div>
         ))}

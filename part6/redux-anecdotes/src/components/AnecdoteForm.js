@@ -1,15 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addVote, newAnecdote } from "../reducers/anecdoteReducer";
+import { newAnecdote, addNew } from "../reducers/anecdoteSlice";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
+
   const addAnecdote = (event) => {
     event.preventDefault();
     const content = event.target.newAnecdote.value;
     console.log(content);
     event.target.newAnecdote.value = "";
-    dispatch(newAnecdote(content));
+    dispatch(addNew(content));
   };
   return (
     <div>
