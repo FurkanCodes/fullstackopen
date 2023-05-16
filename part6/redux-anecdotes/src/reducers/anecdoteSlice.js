@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
+import anecdoteService from "../services/anecdoteService";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -48,6 +49,13 @@ export const anecdoteSlice = createSlice({
     },
   },
 });
+
+export const initAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.getAll();
+    dispatch(setAnecdotes(anecdotes));
+  };
+};
 
 export const { addVote, addNew, appendAnecdote, setAnecdotes } =
   anecdoteSlice.actions;
