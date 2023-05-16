@@ -10,7 +10,6 @@ import {
 import Notification from "./Notification";
 
 const AnecdoteList = () => {
-  // const [voted, setVoted] = useState(false);
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.anecdoteFilter.filter);
   const anecdotes = useSelector((state) => state.anecdotesSlice);
