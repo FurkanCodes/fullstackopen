@@ -9,7 +9,7 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.anecdoteFilter.filter);
   const anecdotes = useSelector((state) => state.anecdotesSlice);
-  const voted = useSelector((state) => state.notificationSlice.voted);
+
   let slicedAnecdotes = anecdotes.slice();
   const byVotes = (b1, b2) => parseFloat(b2.votes) - parseFloat(b1.votes);
   const vote = (id, content) => {
@@ -19,7 +19,6 @@ const AnecdoteList = () => {
   return (
     <div>
       {" "}
-      {voted == true && <Notification />}
       {slicedAnecdotes
         .sort(byVotes)
         .filter((a) => a.content.includes(filter))

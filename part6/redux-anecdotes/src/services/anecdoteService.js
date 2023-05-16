@@ -7,7 +7,7 @@ const getAll = async () => {
   return response.data;
 };
 
-const createNew = async (content, votes) => {
+const createNew = async (content) => {
   const object = {
     content: content,
     id: (100000 * Math.random()).toFixed(0),
