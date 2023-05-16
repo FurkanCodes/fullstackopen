@@ -8,7 +8,7 @@ import anecdoteSlice, {
 } from "./reducers/anecdoteSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-
+import Notification from "./components/Notification";
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,7 +16,10 @@ const App = () => {
   }, [dispatch]);
   return (
     <div>
+      <h2>Anecdotes</h2>
+      <Notification />
       <AnecdoteList />
+
       <Filter />
       <AnecdoteForm />
     </div>

@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addVote } from "../reducers/anecdoteSlice";
-import {
-  setNotification,
-  removeNotification,
-  setVoted,
-} from "../reducers/notificationSlice";
+import { createNotification } from "../reducers/notificationSlice";
 
 import Notification from "./Notification";
 
@@ -17,19 +13,12 @@ const AnecdoteList = () => {
   let slicedAnecdotes = anecdotes.slice();
   const byVotes = (b1, b2) => parseFloat(b2.votes) - parseFloat(b1.votes);
   const vote = (id, content) => {
-    dispatch(setVoted(true));
     dispatch(addVote(id));
-    dispatch(setNotification("YOU VOTED" + " '" + content + "'"));
-    setInterval(() => {
-      dispatch(removeNotification());
-      dispatch(setVoted(false));
-    }, 4000);
-    dispatch(setVoted(false));
+    dispatch(createNotification(`You voted '${content}'`, 5));
   };
   return (
     <div>
       {" "}
-      <h2>Anecdotes</h2>
       {voted == true && <Notification />}
       {slicedAnecdotes
         .sort(byVotes)

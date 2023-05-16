@@ -4,22 +4,27 @@ export const notificationSlice = createSlice({
   name: "notification",
   initialState: {
     notification: "",
-    voted: false,
   },
   reducers: {
     setNotification: (state, action) => {
-      console.log(action.payload);
       state.notification = action.payload;
-    },
-    removeNotification: (state) => {
-      state.notification = "";
-    },
-    setVoted: (state) => {
-      state.voted = true;
     },
   },
 });
 
-export const { setNotification, removeNotification, setVoted } =
-  notificationSlice.actions;
+export const { setNotification } = notificationSlice.actions;
+
+let timeoutId = null;
+
+export const createNotification = (message, delay) => {
+  return async (dispatch) => {
+    dispatch(setNotification(message));
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => dispatch(setNotification(null)), delay * 1000);
+  };
+};
 export default notificationSlice.reducer;
