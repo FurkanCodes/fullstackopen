@@ -16,9 +16,7 @@ export const anecdoteSlice = createSlice({
         current.id !== id ? current : changedAnecdote
       );
     },
-    addNew: (state, action) => {
-      state.push(action.payload);
-    },
+
     appendAnecdote(state, action) {
       state.push(action.payload);
     },
@@ -33,6 +31,13 @@ export const initAnecdotes = () => {
   return async (dispatch) => {
     const anecdotes = await anecdoteService.getAll();
     dispatch(setAnecdotes(anecdotes));
+  };
+};
+
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const newAnecdote = await anecdoteService.createNew(content);
+    dispatch(appendAnecdote(newAnecdote));
   };
 };
 
