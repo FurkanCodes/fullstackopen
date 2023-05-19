@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addVote, initAnecdotes } from "../reducers/anecdoteSlice";
+import {
+  voteAnecdote,
+  addVote,
+  initAnecdotes,
+} from "../reducers/anecdoteSlice";
 import { createNotification } from "../reducers/notificationSlice";
 
 const AnecdoteList = () => {
@@ -13,9 +17,9 @@ const AnecdoteList = () => {
 
   let slicedAnecdotes = anecdotes.slice();
   const byVotes = (b1, b2) => parseFloat(b2.votes) - parseFloat(b1.votes);
-  const vote = (id, content) => {
-    dispatch(addVote(id));
-    dispatch(createNotification(`You voted '${content}'`, 5));
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote));
+    dispatch(createNotification(`You voted '${anecdote.content}'`, 5));
   };
   return (
     <div>
@@ -28,9 +32,7 @@ const AnecdoteList = () => {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id, anecdote.content)}>
-                vote
-              </button>
+              <button onClick={() => vote(anecdote)}>vote</button>
             </div>
           </div>
         ))}

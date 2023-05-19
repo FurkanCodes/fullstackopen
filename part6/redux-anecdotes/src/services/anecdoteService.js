@@ -17,11 +17,10 @@ const createNew = async (content) => {
   return response.data;
 };
 
-const update = async (objectToUpdate) => {
-  const response = await axios.put(
-    `${baseUrl}/${objectToUpdate.id}`,
-    objectToUpdate
-  );
+const update = async (anecdote) => {
+  const { id } = anecdote;
+  const votes = { votes: anecdote.votes + 1 };
+  const response = await axios.patch(`${baseUrl}/${id}`, votes);
   return response.data;
 };
 
