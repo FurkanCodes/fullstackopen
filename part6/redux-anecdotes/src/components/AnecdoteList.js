@@ -18,8 +18,9 @@ const AnecdoteList = () => {
   let slicedAnecdotes = anecdotes.slice();
   const byVotes = (b1, b2) => parseFloat(b2.votes) - parseFloat(b1.votes);
   const vote = (anecdote) => {
+    const { content } = anecdote;
     dispatch(voteAnecdote(anecdote));
-    dispatch(createNotification(`You voted '${anecdote.content}'`, 5));
+    dispatch(createNotification(`You voted '${content}'`, 5));
   };
   return (
     <div>
