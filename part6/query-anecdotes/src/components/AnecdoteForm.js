@@ -4,12 +4,20 @@ import { NotificationContext } from "../contexts/NotificationContext";
 import { useContext } from "react";
 const AnecdoteForm = () => {
   const queryClient = useQueryClient();
+
   const { addNotification, removeNotification } =
     useContext(NotificationContext);
+
   const newAnecdoteMutation = useMutation(createAnecdote, {
-    onSuccess: (newAnecdote) => {
+    onSuccess: (newAnecdote, anecdote) => {
       const anecdotes = queryClient.getQueryData("anecdotes");
       queryClient.setQueryData("anecdotes", anecdotes.concat(newAnecdote));
+      addNotification(anecdote.content + " has been added");
+      setTimeout(removeNotification, 5000);
+    },
+    onError: (error) => {
+      addNotification(error.response.data.error);
+      setTimeout(removeNotification, 5000);
     },
   });
 
@@ -18,8 +26,6 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
     newAnecdoteMutation.mutate({ content, votes: 0 });
-    addNotification(content + "has been added");
-    setTimeout(removeNotification, 5000);
   };
 
   return (

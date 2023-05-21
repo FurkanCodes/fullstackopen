@@ -13,6 +13,7 @@ export const NotificationContextProvider = ({ children }) => {
       type: "ADD_NOTIFICATION",
       payload: notification,
     });
+
     console.log(notification);
   };
 

@@ -10,6 +10,10 @@ export const NotificationReducer = (state, action) => {
       return {
         notifications: (action.payload = ""),
       };
+    case "ADD_ERROR":
+      return {
+        errors: [action.payload, state.errors],
+      };
 
     default:
       return state;

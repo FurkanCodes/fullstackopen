@@ -10,9 +10,9 @@ const Notification = () => {
     marginBottom: 5,
   };
   if (notifications) {
-    return <div style={style}>{notifications} </div>;
+    return <div style={style}>{notifications}</div>;
   } else {
-    return <div> </div>;
+    return <div></div>;
   }
 };
 
