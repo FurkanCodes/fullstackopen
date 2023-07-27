@@ -187,11 +187,14 @@ const resolvers = {
       const { name, setBornTo } = args;
 
       const author = authors.find((auth) => auth.name === name);
-
       if (!author) {
-        return null; // Return null if the author is not found
+        throw new Error('Author not found');
       }
 
+      // Assuming 'setBornTo' is an integer representing the birth year
+      if (isNaN(setBornTo) || setBornTo < 0) {
+        throw new Error('Invalid birth year');
+      }
       author.born = setBornTo;
       return author;
     },
