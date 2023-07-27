@@ -144,7 +144,6 @@ const typeDefs = `
   }
   
   type Query {
-   
     me: User
   }
   
@@ -190,7 +189,14 @@ const resolvers = {
       return Book.find(queryConditions).populate('author');
     },
     me: (root, args, context) => {
-      return context.currentUser
+      // Check if a user is authenticated based on the token in the context
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new AuthenticationError('Not authenticated. You must log in first.');
+      }
+
+      return currentUser;
     },
     allAuthors: () => authors
   },
@@ -254,7 +260,7 @@ const resolvers = {
       }
     },
     createUser: async (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
 
       return user.save()
         .catch(error => {
