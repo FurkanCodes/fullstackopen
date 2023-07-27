@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+
 const { v4: uuid } = require('uuid')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
@@ -192,10 +193,6 @@ const resolvers = {
       // Check if a user is authenticated based on the token in the context
       const currentUser = context.currentUser;
 
-      if (!currentUser) {
-        throw new AuthenticationError('Not authenticated. You must log in first.');
-      }
-
       return currentUser;
     },
     allAuthors: () => authors
@@ -305,8 +302,10 @@ startStandaloneServer(server, {
   context: async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.startsWith('Bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-      const currentUser = await User.findById(decodedToken.id).populate('friends')
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.JWT_SECRET
+      )
+      const currentUser = await User.findById(decodedToken.id)
       return { currentUser }
     }
   },
