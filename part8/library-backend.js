@@ -136,22 +136,30 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      if (!args.author && !args.genre) {
-        return books;
+    allBooks: async (root, args) => {
+      // Handle the query for all books with optional parameters: author and genre
+      const { author, genre } = args;
+      const queryConditions = {};
+
+      // If author parameter is provided, find the author in the database based on the name
+      if (author) {
+        const foundAuthor = await Author.findOne({ name: author });
+
+        // If the author is found, add the author's ObjectId to the query conditions
+        if (foundAuthor) {
+          queryConditions.author = foundAuthor._id;
+        } else {
+          // If author is not found, return an empty array as no books will be found
+          return [];
+        }
+      }
+      // If genre parameter is provided, add the genre to the query conditions
+      if (genre) {
+        queryConditions.genres = { $in: [genre] };
       }
 
-      let filteredBooks = books;
-
-      if (args.author) {
-        filteredBooks = filteredBooks.filter((book) => book.author === args.author);
-      }
-
-      if (args.genre) {
-        filteredBooks = filteredBooks.filter((book) => book.genres.includes(args.genre));
-      }
-
-      return filteredBooks;
+      // Use the query conditions to find the books in the database
+      return Book.find(queryConditions).populate('author');
     },
 
     allAuthors: () => authors
@@ -160,9 +168,15 @@ const resolvers = {
     bookCount: (root) => { return books.filter(b => b.author === root.name).length }
   },
   Mutation: {
-
     addBook: async (root, args) => {
       const { title, author, published, genres } = args;
+
+      // Validate input data before saving to the database
+      if (title.length < 5) {
+        throw new UserInputError('Book title must be at least 5 characters long.', {
+          invalidArgs: { title },
+        });
+      }
 
       // Find the author in the database based on the provided name
       let foundAuthor = await Author.findOne({ name: author });
@@ -170,7 +184,11 @@ const resolvers = {
       // If the author doesn't exist, create a new author and save it to the database
       if (!foundAuthor) {
         foundAuthor = new Author({ name: author });
-        await foundAuthor.save();
+        try {
+          await foundAuthor.save();
+        } catch (error) {
+          throw new UserInputError(error.message, { invalidArgs: { author } });
+        }
       }
 
       // Create a new book with the associated author's ObjectId
@@ -181,26 +199,34 @@ const resolvers = {
         genres,
       });
 
-      return newBook.save()
+      try {
+        return newBook.save()
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args });
+      }
     },
-
-    editAuthor: (root, args) => {
+    editAuthor: async (root, args) => {
       const { name, setBornTo } = args;
 
-      const author = authors.find((auth) => auth.name === name);
-      if (!author) {
-        throw new Error('Author not found');
+      // Find the author in the database based on the provided name
+      const foundAuthor = await Author.findOne({ name });
+
+      if (!foundAuthor) {
+        return null; // Return null if the author is not found
       }
 
-      // Assuming 'setBornTo' is an integer representing the birth year
-      if (isNaN(setBornTo) || setBornTo < 0) {
-        throw new Error('Invalid birth year');
+      // Update the author's born field and save the changes
+      foundAuthor.born = setBornTo;
+      try {
+        return foundAuthor.save();
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args });
       }
-      author.born = setBornTo;
-      return author;
     },
-  }
+    // Existing mutation resolvers...
+  },
 }
+
 
 const server = new ApolloServer({
   typeDefs,
