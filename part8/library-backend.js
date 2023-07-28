@@ -206,7 +206,7 @@ const resolvers = {
 
       // Validate input data before saving to the database
       if (title.length < 5) {
-        throw new UserInputError('Book title must be at least 5 characters long.', {
+        throw new Error('Book title must be at least 5 characters long.', {
           invalidArgs: { title },
         });
       }
@@ -220,7 +220,7 @@ const resolvers = {
         try {
           await foundAuthor.save();
         } catch (error) {
-          throw new UserInputError(error.message, { invalidArgs: { author } });
+          throw new Error(error.message, { invalidArgs: { author } });
         }
       }
 
@@ -235,7 +235,7 @@ const resolvers = {
       try {
         return newBook.save()
       } catch (error) {
-        throw new UserInputError(error.message, { invalidArgs: args });
+        throw new Error(error.message, { invalidArgs: args });
       }
     },
     editAuthor: async (root, args) => {
@@ -253,7 +253,7 @@ const resolvers = {
       try {
         return foundAuthor.save();
       } catch (error) {
-        throw new UserInputError(error.message, { invalidArgs: args });
+        throw new Error(error.message, { invalidArgs: args });
       }
     },
     createUser: async (root, args) => {
