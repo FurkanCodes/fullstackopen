@@ -13,7 +13,7 @@ const BooksByFavoriteGenreView = ({ show }) => {
     const favBooks = favBooksData.booksByFavoriteGenre;
     const favoriteGenre = currentUserData.currentUser.favoriteGenre
     const author = favBooks[0].author.name
-
+    console.log(favBooks)
     if (!show) {
         return null
     }
