@@ -6,8 +6,7 @@ const Books = (props) => {
 
   const [selectedGenre, setSelectedGenre] = useState(null);
   const { loading, error, data } = useQuery(GET_ALL_BOOKS);
-  const books = data.allBooks;
-
+  const books = data?.allBooks || []; // Use optional chaining to avoid accessing data when it's undefined
   const genres = Array.from(new Set(books.flatMap((book) => book.genres)));
 
   const handleGenreClick = (genre) => {
@@ -27,8 +26,9 @@ const Books = (props) => {
   }
 
   if (!props.show) {
-    return null
+    return null;
   }
+
   return (
     <div>
       <h2>books</h2>
@@ -58,12 +58,9 @@ const Books = (props) => {
             </tr>
           ))}
         </tbody>
-
       </table>
-
     </div>
-
-  )
+  );
 }
 
 export default Books

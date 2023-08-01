@@ -107,6 +107,8 @@ const typeDefs = `
    authorCount: Int!
    allBooks(author: String, genre: String): [Book!]! 
    allAuthors: [Author!]!
+   currentUser: User
+     booksByFavoriteGenre: [Book!]!
   }
 
   type Book {
@@ -145,7 +147,7 @@ const typeDefs = `
   }
   
   type Query {
-    me: User
+    currentUser: User
   }
   
   type Mutation {
@@ -164,40 +166,49 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: async (root, args) => {
-      // Handle the query for all books with optional parameters: author and genre
-      const { author, genre } = args;
+    allBooks: async (root, args, { currentUser }) => {
+      const { author, genre, favoriteGenre } = args;
       const queryConditions = {};
+      console.log(currentUser.favoriteGenre)
+      // If favoriteGenre parameter is provided and the user is logged in
+      if (favoriteGenre && currentUser) {
+        // Add the favoriteGenre to the query conditions
+        queryConditions.genres = { $in: [favoriteGenre] };
+      } else {
+        // If favoriteGenre is not provided or user is not logged in, proceed with author and genre logic
+        if (author) {
+          const foundAuthor = await Author.findOne({ name: author });
 
-      // If author parameter is provided, find the author in the database based on the name
-      if (author) {
-        const foundAuthor = await Author.findOne({ name: author });
+          if (foundAuthor) {
+            queryConditions.author = foundAuthor._id;
+          } else {
+            return [];
+          }
+        }
 
-        // If the author is found, add the author's ObjectId to the query conditions
-        if (foundAuthor) {
-          queryConditions.author = foundAuthor._id;
-        } else {
-          // If author is not found, return an empty array as no books will be found
-          return [];
+        if (genre) {
+          queryConditions.genres = { $in: [genre] };
         }
       }
-      // If genre parameter is provided, add the genre to the query conditions
-      if (genre) {
-        queryConditions.genres = { $in: [genre] };
-      }
 
-      // Use the query conditions to find the books in the database
       return Book.find(queryConditions).populate('author');
     },
-    me: (root, args, context) => {
-      // Check if a user is authenticated based on the token in the context
+    currentUser: (root, args, context) => {
       const currentUser = context.currentUser;
-
+      console.log('Current User in me resolver:', currentUser);
       return currentUser;
     },
     allAuthors: async (args) => {
       const authors = await Author.find({});
       return authors;
+    },
+    booksByFavoriteGenre: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new Error('Authentication required.'); // Handle case where user is not logged in
+      }
+
+      // Fetch books based on the logged-in user's favorite genre
+      return Book.find({ genres: { $in: [currentUser.favoriteGenre] } }).populate('author');
     }
   },
   Author: {
@@ -309,6 +320,7 @@ startStandaloneServer(server, {
         auth.substring(7), process.env.JWT_SECRET
       )
       const currentUser = await User.findById(decodedToken.id)
+
       return { currentUser }
     }
   },

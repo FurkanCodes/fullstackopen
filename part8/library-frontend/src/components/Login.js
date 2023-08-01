@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from './queries'
 
-function Login({ setToken, setError }) {
+function Login({ setToken, setError, setPage }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -21,12 +21,14 @@ function Login({ setToken, setError }) {
             localStorage.setItem('user-token', token)
         }
     }, [result.data]) // eslint-disable-line
+
+
     const submit = async (event) => {
         event.preventDefault()
 
         login({ variables: { username, password } })
         setError(null);
-
+        setPage('authors')
 
     }
 

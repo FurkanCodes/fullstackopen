@@ -59,3 +59,25 @@ mutation login($username: String!, $password: String!) {
   }
 }
 `
+export const BOOKS_BY_FAVORITE_GENRE = gql`
+  query BooksByFavoriteGenre {
+    booksByFavoriteGenre {
+      title
+      published
+      author {
+        name
+      }
+      genres
+    }
+  }
+`;
+
+export const CURRENT_USER = gql`
+  query CurrentUser {
+    currentUser {
+      id
+      username
+      favoriteGenre
+    }
+  }
+`;
