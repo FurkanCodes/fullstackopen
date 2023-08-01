@@ -195,7 +195,10 @@ const resolvers = {
 
       return currentUser;
     },
-    allAuthors: () => authors
+    allAuthors: async (args) => {
+      const authors = await Author.find({});
+      return authors;
+    }
   },
   Author: {
     bookCount: (root) => { return books.filter(b => b.author === root.name).length }

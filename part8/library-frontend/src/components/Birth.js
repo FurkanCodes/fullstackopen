@@ -7,25 +7,22 @@ const BirthForm = () => {
     const [name, setName] = useState('');
     const [birthYear, setBirthYear] = useState('');
 
-    const [createOrUpdateAuthor] = useMutation(EDIT_AUTHOR);
+    const [changeBirth] = useMutation(EDIT_AUTHOR, {
+        refetchQueries: [{ query: GET_ALL_AUTHORS }],
+    });
     const { loading, error, data } = useQuery(GET_ALL_AUTHORS);
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
+        e.preventDefault()
         try {
-            const { data } = await createOrUpdateAuthor({
+            await changeBirth({
                 variables: {
                     name,
                     setBornTo: parseInt(birthYear),
                 },
+
             });
 
-            if (data.editAuthor.id) {
-                console.log('Author updated successfully!');
-            } else {
-                console.log('Author added successfully!');
-            }
-
+            console.log('Author birth year updated successfully!');
             setName('');
             setBirthYear('');
         } catch (error) {
