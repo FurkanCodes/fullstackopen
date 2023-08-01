@@ -5,17 +5,23 @@ import { useQuery } from '@apollo/client'
 const Books = (props) => {
 
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const { loading, error, data } = useQuery(GET_ALL_BOOKS);
-  const books = data?.allBooks || []; // Use optional chaining to avoid accessing data when it's undefined
+  const { loading, error, data } = useQuery(GET_ALL_BOOKS,
+    { refetchQueries: [{ query: GET_ALL_BOOKS }] }, {
+    variables: { genre: selectedGenre },
+  });
+
+  const books = data?.allBooks || [];
   const genres = Array.from(new Set(books.flatMap((book) => book.genres)));
 
   const handleGenreClick = (genre) => {
     setSelectedGenre(genre);
   };
 
-  const filteredBooks = selectedGenre
-    ? books.filter((book) => book.genres.includes(selectedGenre))
-    : books;
+  let filteredBooks = books; // Initialize filteredBooks with all books
+
+  if (selectedGenre) {
+    filteredBooks = books.filter((book) => book.genres.includes(selectedGenre));
+  }
 
   if (loading) {
     return <div>Loading...</div>;
