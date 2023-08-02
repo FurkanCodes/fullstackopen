@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-import { ADD_BOOK, GET_ALL_BOOKS, GET_ALL_AUTHORS, BOOK_ADDED } from './queries';
-import { useMutation, useSubscription } from '@apollo/client'
+import { ADD_BOOK, GET_ALL_BOOKS, GET_ALL_AUTHORS } from './queries';
+import { useMutation, } from '@apollo/client'
+import { updateCache } from '../App';
 const NewBook = (props) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -9,51 +10,40 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
-  const updateCache = (cache, addedBook) => {
-    const uniqByName = (a) => {
-      let seen = new Set();
-      return a.filter((item) => {
-        let k = item.name;
-        return seen.has(k) ? false : seen.add(k);
-      });
-    };
 
-    cache.modify({
-      fields: {
-        allBooks(existingBooks = []) {
-          return uniqByName([...existingBooks, addedBook]);
-        },
-      },
-    });
-  };
-  useSubscription(BOOK_ADDED, {
-    onData: ({ client, data }) => {
-      console.log(data)
-      const addedBook = data.data.bookAdded
-      window.alert(`${addedBook.title} added`)
-      updateCache(client.cache, { query: GET_ALL_BOOKS }, { query: GET_ALL_AUTHORS }, addedBook)
 
-    }
-  }
-  )
+
+
+  // const [addBook] = useMutation(ADD_BOOK, {
+
+  //   update: (cache, { data: { addBook } }) => {
+
+  //     // Get the current data from the cache for GET_ALL_BOOKS
+  //     const { allBooks } = cache.readQuery({ query: GET_ALL_BOOKS });
+
+  //     // Update the cache with the new book
+  //     cache.writeQuery({
+  //       query: GET_ALL_BOOKS,
+  //       data: { allBooks: allBooks.concat(addBook) },
+  //     });
+  //   },
+  // });
+
+
   const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: GET_ALL_BOOKS }, { query: GET_ALL_AUTHORS }],
-    update: (cache, { data: { addBook } }) => {
-      // Get the current data from the cache for GET_ALL_BOOKS
-      const { allBooks } = cache.readQuery({ query: GET_ALL_BOOKS });
-
-      // Update the cache with the new book
-      cache.writeQuery({
-        query: GET_ALL_BOOKS,
-        data: { allBooks: allBooks.concat(addBook) },
-      });
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message)
     },
-  });
-
+    update: (cache, response) => {
+      updateCache(cache, { query: GET_ALL_BOOKS }, response.data.addBook)
+    },
+  })
   const submit = async (event) => {
     event.preventDefault();
     addBook({
       variables: { title, author, published: parseInt(published), genres },
+      // Refetch GET_ALL_BOOKS query after adding a new book
+      refetchQueries: [{ query: GET_ALL_BOOKS }, { query: GET_ALL_AUTHORS }],
     });
 
     setTitle('');
@@ -61,6 +51,7 @@ const NewBook = (props) => {
     setAuthor('');
     setGenres([]);
     setGenre('');
+
     console.log('add book...');
   };
 
