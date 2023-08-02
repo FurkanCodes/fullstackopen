@@ -23,7 +23,21 @@ const splitLink = split(({ query }) => {
     return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription')
 }, wsLink, authLink.concat(httpLink))
 const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+        typePolicies: {
+            Book: {
+                fields: {
+                    author: {
+                        merge(existing, incoming, { mergeObjects }) {
+
+                            return mergeObjects(existing, incoming);
+
+                        },
+                    }
+                }
+            }
+        }
+    }),
     link: splitLink
 })
 

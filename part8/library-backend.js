@@ -16,6 +16,8 @@ const cors = require('cors')
 const http = require('http')
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
+const DataLoader = require('dataloader');
+
 
 
 const MONGODB_URI = process.env.MONGO_DB_URI
@@ -27,7 +29,7 @@ mongoose.connect(MONGODB_URI, {
 }).catch((error) => {
   console.error('Error connecting to MongoDB:', error.message);
 });
-
+mongoose.set("debug", true)
 let authors = [
   {
     name: 'Robert Martin',
@@ -112,6 +114,7 @@ let books = [
 const typeDefs = `
 
   type Query {
+    
    bookCount: Int!
    authorCount: Int!
    allBooks(author: String, genre: String): [Book!]! 
@@ -156,6 +159,7 @@ const typeDefs = `
   }
   
   type Query {
+    id: ID!
     currentUser: User
   }
   
@@ -174,7 +178,14 @@ const typeDefs = `
     bookAdded: Book!
   }    
 `
-
+const userLoader = new DataLoader(async (ids) => {
+  const users = await User.find({ _id: { $in: ids } });
+  const userMap = {};
+  users.forEach((user) => {
+    userMap[user._id.toString()] = user;
+  });
+  return ids.map((id) => userMap[id.toString()] || null);
+});
 const resolvers = {
   Query: {
     bookCount: () => books.length,
@@ -328,6 +339,7 @@ const resolvers = {
 // })
 
 const start = async () => {
+
   const app = express()
   const httpServer = http.createServer(app)
 
@@ -339,6 +351,20 @@ const start = async () => {
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       { async serverWillStart() { return { async drainServer() { await serverCleanup.dispose(); }, }; }, },],
+    context: async ({ req }) => {
+      const auth = req ? req.headers.authorization : null;
+      if (auth && auth.startsWith('Bearer ')) {
+        const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET);
+        const currentUser = await User.findById(decodedToken.id);
+        return {
+          currentUser,
+          userLoader, // Include DataLoader for User in the context
+        };
+      }
+      return {
+        userLoader, // Include DataLoader for User in the context even if no user is authenticated
+      };
+    },
   })
 
   await server.start()
