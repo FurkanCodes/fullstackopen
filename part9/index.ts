@@ -1,14 +1,28 @@
 import express from 'express';
 import { calculateBmi } from './calculateBmi';
 import { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import calculateExercise from './exerciseCalculator';
+
 
 const app = express();
 const PORT = 3003;
-app.get('/hello', (_req, res) => {
-    res.send("Hello full stack")
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+
+app.get('/exercises', (_req, res) => {
+
+    res.send('Hello World!')
 
 })
 
+app.post('/exercises', (req: Request, res) => {
+
+    const { daily_exercises, target } = req.body;
+    const result = calculateExercise(daily_exercises, target);
+    res.json(result);
+})
 
 interface ReqQuery {
     weight: string;
