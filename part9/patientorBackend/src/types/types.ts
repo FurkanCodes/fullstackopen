@@ -9,9 +9,10 @@ export type Patient = {
     name: string,
     dateOfBirth: string,
     ssn: string,
-    gender: string,
+    gender: 'male' | 'female' | 'other';
     occupation: string,
 }
+
 
 export type ssnOmit = Omit<Patient, "ssn">;
 export type NewPatientEntry = Omit<Patient, 'id'>;
