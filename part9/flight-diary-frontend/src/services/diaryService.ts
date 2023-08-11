@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { DiaryEntry } from "../types";
 
 const API_URL = "http://localhost:3001/"
@@ -9,6 +9,8 @@ export const fetchDiaries = async () => {
 };
 
 export const addDiary = async (newEntry: DiaryEntry): Promise<DiaryEntry> => {
+
     const response = await axios.post<DiaryEntry>(`${API_URL}api/diaries`, newEntry);
     return response.data;
+
 };
