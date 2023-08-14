@@ -110,6 +110,24 @@ const patients: Patient[] = [
             },
         ],
     },
+    {
+        id: 'd2773c6e-f723-11e9-8f0b-362b9e155667',
+        name: 'asfasfas Luukkainen',
+        dateOfBirth: '1971-04-09',
+        ssn: '090471-8890',
+        gender: Gender.Male,
+        occupation: 'asf evangelist',
+        entries: [
+            {
+                id: '54a8746e-34c4-4cf4-bf72-bfecd039be9a',
+                date: '2019-05-01',
+                specialist: 'Dr Byte House',
+                type: 'HealthCheck',
+                description: 'Digital overdose, very bytestatic. Otherwise healthy.',
+                healthCheckRating: 0,
+            },
+        ],
+    },
 ];
 
 export default patients;
