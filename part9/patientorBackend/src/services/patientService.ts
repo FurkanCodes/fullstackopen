@@ -9,12 +9,13 @@ const getPatients = (): ssnOmit[] => {
         name,
         dateOfBirth,
         gender,
-        occupation }) => ({
+        occupation,
+        entries }) => ({
             id,
             dateOfBirth,
             name,
             gender,
-            occupation
+            occupation, entries
         }))
 }
 

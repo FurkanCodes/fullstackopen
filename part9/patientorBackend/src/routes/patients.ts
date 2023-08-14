@@ -9,10 +9,10 @@ router.get('/', (_req, res) => {
 
 
 router.post('/', (req, res) => {
-    const { name, dateOfBirth, ssn, gender, occupation } = req.body;
+    const { name, dateOfBirth, ssn, gender, occupation, entries } = req.body;
 
     const addedEntry = patientService.addPatient(
-        { name, dateOfBirth, ssn, gender, occupation })
+        { name, dateOfBirth, ssn, gender, occupation, entries })
     res.json(addedEntry);
 });
 
